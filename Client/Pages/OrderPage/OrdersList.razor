@@ -1,0 +1,54 @@
+﻿@page "/order-list"
+@inject HttpClient HttpClient
+@using FinalProject.Shared
+@inject NavigationManager nvm
+@layout _AdminLayout
+
+<h3>Order List</h3>
+
+@if (orders != null)
+{
+    <table class="table">
+        <tr>
+            <th>Order ID</th>
+            <th>Customer Name</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Total price</th>
+            <th>Actions</th>
+        </tr>
+        @foreach (var order in orders)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.CustomerName</td>
+                <td>@order.Address</td>
+                <td>@order.Email</td>
+                <td>@order.TotalPrice</td>
+                <td>
+                    <button @onclick="(() => EditOrder(order.Id))">Edit</button>
+                    <button @onclick="(() => DeleteOrder(order.Id))">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+@code {
+    List<Order> orders = new List<Order>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await HttpClient.GetFromJsonAsync<List<Order>>("api/orders");
+    }
+
+    private void EditOrder(int orderId)
+    {
+        nvm.NavigateTo($"/orders/edit/{orderId}");
+    }
+
+    private void DeleteOrder(int orderId)
+    {
+        nvm.NavigateTo($"/orders/delete/{orderId}");
+    }
+}

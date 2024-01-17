@@ -1,0 +1,50 @@
+﻿@page "/products/delete/{productId:int}"
+@inject HttpClient HttpClient
+@using FinalProject.Shared
+@inject NavigationManager nvm
+@layout _AdminLayout
+
+<h3>Product Data</h3>
+
+@if (product != null)
+{
+    <table>
+        <tr>
+            <td>Product ID: </td>
+            <td>@product.Id</td>
+        </tr>
+        <tr>
+            <td>Name: </td>
+            <td>@product.Name</td>
+        </tr>
+        <tr>
+            <td>Description: </td>
+            <td>@product.Description</td>
+        </tr>
+        <tr>
+            <td>Price: </td>
+            <td>@product.Price</td>
+        </tr>
+        <tr>
+            <td>
+                <button class="btn btn-primary" @onclick="(() => HandleDelete(product.Id))">Delete</button>
+            </td>
+        </tr>
+    </table>
+}
+
+@code {
+    [Parameter] public int productId { get; set; }
+    public Product product;
+
+    protected override async Task OnInitializedAsync()
+    {
+        product = await HttpClient.GetFromJsonAsync<Product>($"api/users/{productId}");
+    }
+
+    private async void HandleDelete(int Id)
+    {
+        await HttpClient.DeleteAsync($"api/products/{Id}");
+        nvm.NavigateTo("/admin");
+    }
+}

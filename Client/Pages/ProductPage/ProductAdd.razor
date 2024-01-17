@@ -2,6 +2,7 @@
 @inject HttpClient HttpClient
 @inject NavigationManager nvm
 @using FinalProject.Shared
+@layout _AdminLayout
 
 <h3>Add Product</h3>
 
@@ -34,22 +35,18 @@
     </div>
 
     <div class="form-group">
-        <button type="submit">Add Product</button>
+        <button class="btn btn-primary" type="submit">Add Product</button>
     </div>
 </EditForm>
-<p>@product.Name</p>
-<p>@product.Price</p>
 
 
 @code {
     public Product product = new Product();
-    //private ImageModel imageModel = new ImageModel();
-    //private ImageModel uploadedImage;
 
     private async Task AddProduct()
     {
         await HttpClient.PostAsJsonAsync("api/products", product);
-        nvm.NavigateTo("/products");
+        nvm.NavigateTo("/admin");
     }
 
     private async Task OnFileChanged(InputFileChangeEventArgs e)

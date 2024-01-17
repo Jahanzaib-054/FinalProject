@@ -1,0 +1,55 @@
+﻿@page "/products/edit/{productId:int}"
+@inject HttpClient HttpClient
+@using FinalProject.Shared
+@inject NavigationManager nvm
+@layout _AdminLayout
+
+<h3>Edit product</h3>
+
+@if (product != null)
+{
+    <EditForm Model="@product" OnValidSubmit="UpdateProduct">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="userName">Product Name:</label>
+            <InputText id="userName" @bind-Value="product.Name" />
+            <ValidationMessage For="@(() => product.Name)" />
+        </div>
+        <div class="form-group">
+            <label for="userEmail">Product Description:</label>
+            <InputText id="userEmail" @bind-Value="product.Description" />
+            <ValidationMessage For="@(() => product.Description)" />
+        </div>
+        <div class="form-group">
+            <label for="userpass">price:</label>
+            <InputNumber id="user pass" @bind-Value="product.Price" />
+            <ValidationMessage For="@(() => product.Price)" />
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+    </EditForm>
+}
+else
+{
+    <p>Product not found.</p>
+}
+
+@code {
+    [Parameter] public int productId { get; set; }
+    public Product product;
+
+    protected override async Task OnInitializedAsync()
+    {
+        product = await HttpClient.GetFromJsonAsync<Product>($"api/products/{productId}");
+    }
+
+    private async Task UpdateProduct()
+    {
+        await HttpClient.PutAsJsonAsync($"api/products/{productId}", product);
+        nvm.NavigateTo("/admin");
+    }
+}

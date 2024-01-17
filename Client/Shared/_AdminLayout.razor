@@ -1,0 +1,45 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+
+
+<div class="page">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid px-0">
+            <a class="navbar-brand" href="#">
+                <img src="/img/juta_logo_wh.png" alt="Logo" width="120" height="50" class="d-inline-block align-text-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item px-2">
+                        <a class="nav-link active" aria-current="page" @onclick="Productlist">Products</a>
+                    </li>
+                    <li class="nav-item px-2">
+                        <a class="nav-link" aria-current="page" @onclick="OrderPage">Orders</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h2 class="bg-primary font-monospace text-center text-white">Welcome to Admin Panel</h2>
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+
+@code {
+    private void Productlist()
+    {
+        NavigationManager.NavigateTo("/admin");
+    }
+    private void OrderPage()
+    {
+        NavigationManager.NavigateTo("/order-list");
+    }
+}

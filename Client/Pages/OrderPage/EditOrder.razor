@@ -1,0 +1,60 @@
+﻿@page "/orders/edit/{orderId:int}"
+@inject HttpClient HttpClient
+@using FinalProject.Shared
+@inject NavigationManager nvm
+@layout _AdminLayout
+
+<h3>Edit Order</h3>
+
+@if (order != null)
+{
+    <EditForm Model="@order" OnValidSubmit="UpdateOrder">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="userName">Customer Name:</label>
+            <InputText id="userName" @bind-Value="order.CustomerName" />
+            <ValidationMessage For="@(() => order.CustomerName)" />
+        </div>
+        <div class="form-group">
+            <label for="userEmail">Customer Email:</label>
+            <InputText id="userEmail" @bind-Value="order.Email" />
+            <ValidationMessage For="@(() => order.Email)" />
+        </div>
+        <div class="form-group">
+            <label for="userpass">Customer Address:</label>
+            <InputText id="user pass" @bind-Value="order.Address" />
+            <ValidationMessage For="@(() => order.Address)" />
+        </div>
+        <div class="form-group">
+            <label for="userconf">Total price:</label>
+            <InputRadio id="userconf" @bind-Value="order.TotalPrice" />
+            <ValidationMessage For="@(() => order.TotalPrice)" />
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+    </EditForm>
+}
+else
+{
+    <p>order not found.</p>
+}
+
+@code {
+    [Parameter] public int orderId { get; set; }
+    public Order order;
+
+    protected override async Task OnInitializedAsync()
+    {
+        order = await HttpClient.GetFromJsonAsync<Order>($"api/orders/{orderId}");
+    }
+
+    private async Task UpdateOrder()
+    {
+        await HttpClient.PutAsJsonAsync($"api/orders/{orderId}", order);
+        nvm.NavigateTo("/order-list");
+    }
+}

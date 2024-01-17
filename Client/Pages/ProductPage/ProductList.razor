@@ -1,13 +1,16 @@
-﻿@page "/products"
+﻿@page "/admin"
 @inject HttpClient HttpClient
 @using FinalProject.Shared
 @inject NavigationManager nvm
+@layout _AdminLayout
 
 <h3>Product List</h3>
 
+<button class="btn btn-primary" @onclick="(() => Create())">Create Product</button>
+
 @if (products != null)
 {
-    <table>
+    <table class="table">
         <tr>
             <th>Product ID</th>
             <th>Name</th>
@@ -24,8 +27,8 @@
                 <td>@product.Price</td>
                 <td><img src="@($"data:image;base64,{Convert.ToBase64String(product.Image)}")" alt="@product.Name" height="100" width="100" /></td>
                 <td>
-                    <button @onclick="(() => EditProduct(product.Id))">Edit</button>
-                    <button @onclick="(() => DeleteProduct(product.Id))">Delete</button>
+                    <button class="btn btn-primary text-dark" @onclick="(() => EditProduct(product.Id))">Edit</button>
+                    <button class="btn btn-primary text-dark" @onclick="(() => DeleteProduct(product.Id))">Delete</button>
                 </td>
             </tr>
         }
@@ -43,6 +46,10 @@
     private void EditProduct(int productId)
     {
         nvm.NavigateTo($"/products/edit/{productId}");
+    }
+    private void Create()
+    {
+        nvm.NavigateTo($"/products/add");
     }
 
     private void DeleteProduct(int productId)
